@@ -1,19 +1,18 @@
-<script>
+document.addEventListener("DOMContentLoaded", function () {
   let observer = new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          console.log("showing", entry);
-          const fullSizeImageElement = entry.target.querySelector(".full-size");
+          const fullSizeImageElement = entry.target.querySelector(
+            ".hugo-image-full-size"
+          );
 
           fullSizeImageElement.addEventListener("load", function (event) {
-            console.log({ event }, event?.target?.classList);
-
-            event.target.classList.add("loaded");
+            event.target.classList.add("hugo-image-loaded");
           });
 
           fullSizeImageElement.addEventListener("error", function (event) {
-            console.log("error", { event });
+            // console.log("error", { event });
           });
           fullSizeImageElement.src =
             fullSizeImageElement.getAttribute("data-full-size-src");
@@ -29,4 +28,4 @@
   document.querySelectorAll(".hugo-image-wrapper").forEach((imageWrapper) => {
     observer.observe(imageWrapper);
   });
-</script>
+});

@@ -6,11 +6,33 @@ It is a simple set of shortcodes that make adding a blur-up or pixellated preloa
 
 ## Usage
 
-To use this in your Hugo project, you will need to copy and paste the shortcode files into your project structure.
+To use this in your Hugo project, you will need to copy and paste the shortcode file and the static files into your project structure.
 
-The folder to do so is at `/layouts/shortcodes`.
+The shortcode file goes in `/layouts/shortcodes`.
 
-Once you have pasted the shortcode files, you will need to add the shortcodes to the relevant content files.
+Next, the static files can be added however you like. The simplest approach is to add them in your `static` folder and add the relevant markup to your `baseof.html` file. The stylesheet should go in your `head`. The JS file should go in at the bottom of your template.
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ block "title" . }} {{ .Site.Title }} {{ end }}</title>
+
+    <!-- The Hugo Image stylesheet -->
+    <link rel="stylesheet" href="/css/hugo-image.css" />
+  </head>
+  <body>
+    {{ block "main" . }} {{ end }} {{ block "footer" . }}
+
+    <!-- The Hugo Image script file  -->
+    <script src="/js/hugo-image.js"></script>
+    {{ end }}
+  </body>
+</html>
+```
+
+Once you have pasted the static files and referenced them in your template, you will need to add the shortcode to the relevant content files.
 
 example: /content/posts/testing/index.md
 
@@ -29,10 +51,6 @@ An example of a Global Resource in the `assets` folder:
 
 An example of a Page resource in the content's folder:
 {{<hugo-image src="460x300.jpg">}}
-
-These are needed to get the styling and scripting working:
-{{<hugo-image-script>}}
-{{<hugo-image-style>}}
 ```
 
 ### Configuration
@@ -57,7 +75,7 @@ The browser based lazy load also does not give a pleasing preloaded image. It is
 
 ## Roadmap
 
-- figure out how to include script and style shortcodes at a global level
+- figure out how to include script and style snippets at a global level instead of shortcodes
 - add file for render hook to process markdown images
 
 ## License

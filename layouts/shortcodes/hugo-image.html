@@ -1,32 +1,67 @@
-{{/* CONSTANTS */}} {{$PRELOADER_TYPE_BLURRED := "blurred"}}
-{{$PRELOADER_TYPE_PIXELLATED := "pixellated"}} {{$RESOURCE_TYPE_PAGE := "page"}}
-{{$RESOURCE_TYPE_GLOBAL := "global"}} {{/* PROPS */}} {{$rawImageSource := .Get
-"src"}} {{$pixelHeight := .Get "pixelHeight"}} {{$pixelWidth := .Get
-"pixelWidth"}} {{$fluidMaxHeight := .Get "fluidMaxHeight"}} {{$fluidMaxWidth :=
-.Get "fluidMaxWidth"}} {{$preloaderType := .Get "preloaderType"}}
-{{$resourceType := .Get "resourceType"}} {{/* SETUP */}} {{$image :=
-$rawImageSource}} {{/* COERCE DEFAULTS */}} {{$actualPreloaderType :=
-$PRELOADER_TYPE_BLURRED}} {{with $preloaderType}} {{$actualPreloaderType =
-$preloaderType}} {{end}} {{$actualResourceType := $RESOURCE_TYPE_PAGE}} {{if eq
-$resourceType $RESOURCE_TYPE_GLOBAL}} {{$actualResourceType =
-$RESOURCE_TYPE_GLOBAL}} {{end}} {{/* PROCESS IMAGE */}} {{$fullSizeImagePath :=
-$rawImageSource}} {{if strings.HasPrefix $rawImageSource "http"}} {{$image =
-$rawImageSource | resources.GetRemote}} {{else}} {{if eq $actualResourceType
-$RESOURCE_TYPE_GLOBAL}} {{$image = resources.Get $rawImageSource }} {{else}}
-{{$image = .Page.Resources.GetMatch $rawImageSource }} {{end}}
-{{$fullSizeImagePath = $image.Permalink}} {{end}} {{$preloaderImage :=
-$image.Resize "40x"}} {{if (eq $actualPreloaderType
-$PRELOADER_TYPE_PIXELLATED)}} {{$preloaderImage = $image | images.Filter
-(images.Pixelate 60)}} {{end}} {{$width := $image.Width}} {{with $pixelWidth}}
-{{$width = $pixelWidth}} {{end}} {{$height := $image.Height}} {{with
-$pixelHeight}} {{$height = $pixelHeight}} {{end}}
+{{/* CONSTANTS */}}
+{{$PRELOADER_TYPE_BLURRED := "blurred"}}
+{{$PRELOADER_TYPE_PIXELLATED := "pixellated"}}
+{{$RESOURCE_TYPE_PAGE := "page"}}
+{{$RESOURCE_TYPE_GLOBAL := "global"}}
+
+{{/* PROPS */}}
+{{$rawImageSource := .Get "src"}}
+{{$pixelHeight := .Get "pixelHeight"}}
+{{$pixelWidth := .Get "pixelWidth"}}
+{{$fluidMaxHeight := .Get "fluidMaxHeight"}}
+{{$fluidMaxWidth := .Get "fluidMaxWidth"}}
+{{$preloaderType := .Get "preloaderType"}}
+{{$resourceType := .Get "resourceType"}}
+
+{{/* SETUP */}}
+{{$image := $rawImageSource}}
+
+{{/* COERCE DEFAULTS */}}
+{{$actualPreloaderType := $PRELOADER_TYPE_BLURRED}}
+{{with $preloaderType}}
+  {{$actualPreloaderType = $preloaderType}}
+{{end}}
+
+{{$actualResourceType := $RESOURCE_TYPE_PAGE}}
+{{if eq $resourceType $RESOURCE_TYPE_GLOBAL}}
+  {{$actualResourceType = $RESOURCE_TYPE_GLOBAL}}
+{{end}}
+
+{{/* PROCESS IMAGE */}}
+{{$fullSizeImagePath := $rawImageSource}}
+{{if strings.HasPrefix $rawImageSource "http"}}
+  {{$image  = $rawImageSource | resources.GetRemote}}
+{{else}}
+  {{if eq $actualResourceType $RESOURCE_TYPE_GLOBAL}}
+    {{$image  = resources.Get $rawImageSource }}
+  {{else}}
+    {{$image  = .Page.Resources.GetMatch $rawImageSource }}
+  {{end}}
+
+  {{$fullSizeImagePath = $image.Permalink}}
+{{end}}
+
+{{$preloaderImage := $image.Resize "40x"}}
+{{if (eq $actualPreloaderType $PRELOADER_TYPE_PIXELLATED)}}
+  {{$preloaderImage = $image | images.Filter (images.Pixelate 60)}}
+{{end}}
+
+{{$width := $image.Width}}
+{{with $pixelWidth}}
+  {{$width = $pixelWidth}}
+{{end}}
+
+{{$height := $image.Height}}
+{{with $pixelHeight}}
+  {{$height = $pixelHeight}}
+{{end}}
 
 <div
   class="hugo-image-wrapper"
   style="width: {{$width}}px; height: {{$height}}px"
 >
   <img
-    class="placeholder {{if (eq $actualPreloaderType $PRELOADER_TYPE_BLURRED)}}blurred{{end}}"
+    class="hugo-image-placeholder {{if (eq $actualPreloaderType $PRELOADER_TYPE_BLURRED)}}hugo-image-blurred{{end}}"
     src="{{$preloaderImage.RelPermalink}}"
     height="{{$height}}"
     width="{{$width}}"
@@ -34,7 +69,7 @@ $pixelHeight}} {{$height = $pixelHeight}} {{end}}
   <img
     src=""
     data-full-size-src="{{$fullSizeImagePath}}"
-    class="full-size"
+    class="hugo-image-full-size"
     height="{{$height}}"
     width="{{$width}}"
   />
