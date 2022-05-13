@@ -1,0 +1,32 @@
+<style>
+  .hugo-image-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .placeholder {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .full-size {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1s;
+  }
+
+  .blurred {
+    filter: blur(20px);
+  }
+
+  .loaded {
+    opacity: 1;
+  }
+</style>
